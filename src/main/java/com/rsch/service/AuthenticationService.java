@@ -29,10 +29,15 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
+
+        if (userRepository.existsByUsername(request.username())) {
+            throw new IllegalArgumentException("El usuario ya existe");
+        }
+
         var user = new User(
                 null,
                 request.username(),
-                passwordEncoder.encode(request.password()) // ¡IMPORTANTE! Encriptamos antes de guardar
+                passwordEncoder.encode(request.password())
         );
 
         userRepository.save(user);
