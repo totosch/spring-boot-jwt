@@ -32,8 +32,8 @@ class UserServiceTest {
 
     @Test
     void shouldGetAllUsers() {
-        User userReal = new User(1, "testUser", "123456");
-        UserResponse userDto = new UserResponse(1, "testUser");
+        User userReal = new User(1, "rsch", "123456", "Rodrigo","Schillaci","test@gmail.com");
+        UserResponse userDto = new UserResponse(1, "Rodrigo", "Schillaci", "rsch", "test@gmail.com");
 
         when(userRepository.findAll()).thenReturn(List.of(userReal));
 
@@ -42,15 +42,15 @@ class UserServiceTest {
         List<UserResponse> result = userService.getAllUsers();
 
         assertEquals(1, result.size());
-        assertEquals("testUser", result.get(0).username());
+        assertEquals("rsch", result.getFirst().username());
 
         verify(userRepository).findAll();
     }
 
     @Test
     void shouldGetUserById() {
-        User userReal = new User(1, "testUser", "123456");
-        UserResponse userDto = new UserResponse(1, "testUser");
+        User userReal = new User(1, "rsch", "123456", "Rodrigo", "Schillaci", "test@gmail.com");
+        UserResponse userDto = new UserResponse(1, "Rodrigo", "Schillaci", "rsch", "test@gmail.com");
 
         when(userRepository.findById(1)).thenReturn(Optional.of(userReal));
 
@@ -68,13 +68,12 @@ class UserServiceTest {
          assertThrows(UserNotFoundException.class, () -> {
              userService.getUserById(99);
          });
-
          verifyNoInteractions(userMapper);
     }
 
     @Test
     void shouldDeleteUserById() {
-        User userReal = new User(1, "testUser", "123456");
+        User userReal = new User(1, "test", "test", "test", "test", "test");
 
         when(userRepository.existsById(1)).thenReturn(true);
         userService.deleteUserById(1);
@@ -96,10 +95,10 @@ class UserServiceTest {
     @Test
     void shouldInsertUser() {
 
-        UserRequest request = new UserRequest("user", "123456");
-        User userToSave = new User(null, "newUser", "pass123");
-        User userSaved = new User(1, "newUser", "pass123");
-        UserResponse expectedResponse = new UserResponse(1, "newUser");
+        UserRequest request = new UserRequest("Rodrigo","Schillaci", "rsch", "rodrigoschillaci97@gmail.com", "pass123");
+        User userToSave = new User(null, "rsch", "pass123", "Rodrigo", "Schillaci", "rodrigoschillaci97@gmail.com");
+        User userSaved = new User(1, "rsch", "pass123", "Rodrigo", "Schillaci", "rodrigoschillaci97@gmail.com");
+        UserResponse expectedResponse = new UserResponse(1, "Rodrigo", "Schillaci", "rsch", "rodrigoschillaci97@gmail.com");
 
         when(userMapper.toEntity(request)).thenReturn(userToSave);
         when(userRepository.save(userToSave)).thenReturn(userSaved);
@@ -110,6 +109,4 @@ class UserServiceTest {
 
         verify(userRepository).save(userToSave);
     }
-
-
 }

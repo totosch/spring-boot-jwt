@@ -17,18 +17,29 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
+    private String lastName;
+    @Column(nullable = false)
+    private String email;
     @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false)
     private String password;
+
 
     public User() {
     }
 
-    public User(Integer id, String username, String password) {
-
+    public User(Integer id, String name, String lastName, String username, String email, String password) {
         this.id = id;
+        this.name = name;
+        this.lastName = lastName;
         this.username = username;
+        this.email = email;
         this.password = password;
+
     }
 
     public Integer getId() {
@@ -37,6 +48,30 @@ public class User implements UserDetails {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {

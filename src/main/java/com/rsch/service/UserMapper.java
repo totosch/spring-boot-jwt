@@ -11,7 +11,10 @@ public class UserMapper {
     // De DTO a Entidad
     public User toEntity(UserRequest request) {
         User user = new User();
+        user.setName(request.name());
+        user.setLastName(request.lastName());
         user.setUsername(request.username());
+        user.setEmail(request.email());
         user.setPassword(request.password());
         return user;
     }
@@ -20,7 +23,10 @@ public class UserMapper {
     public UserResponse toResponse(User user) {
         return new UserResponse(
                 user.getId(),
-                user.getUsername()
+                user.getName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getEmail()
         );
     }
 }

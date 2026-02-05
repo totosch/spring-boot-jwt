@@ -36,7 +36,10 @@ public class AuthenticationService {
 
         var user = new User(
                 null,
+                request.name(),
+                request.lastName(),
                 request.username(),
+                request.email(),
                 passwordEncoder.encode(request.password())
         );
 
