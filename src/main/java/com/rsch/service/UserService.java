@@ -28,7 +28,7 @@ public class UserService {
     }*/
 
     public Page<UserResponse> getAllUsers(Pageable pageable){
-        return userRepository.findAll(pageable)
+        return userRepository.findByActiveTrue(pageable)
                 .map(userMapper::toResponse);
     }
 
@@ -46,9 +46,10 @@ public class UserService {
     }
 
     public void deleteUserById(Integer id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException(id + " not found");
-        }
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id + " not found"));
+
+        user.setActive(false);
+        userRepository.save(user);
     }
 }

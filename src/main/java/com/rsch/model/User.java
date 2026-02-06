@@ -1,8 +1,6 @@
 package com.rsch.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,12 +19,14 @@ public class User implements UserDetails {
     private String name;
     @Column(nullable = false)
     private String lastName;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private boolean active = true;
 
 
     public User() {
@@ -44,10 +44,6 @@ public class User implements UserDetails {
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -78,6 +74,10 @@ public class User implements UserDetails {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -96,10 +96,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     @Override
@@ -125,5 +121,13 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password);
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
