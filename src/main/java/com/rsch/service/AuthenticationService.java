@@ -3,6 +3,7 @@ package com.rsch.service;
 import com.rsch.dto.AuthenticationRequest;
 import com.rsch.dto.AuthenticationResponse;
 import com.rsch.dto.RegisterRequest;
+import com.rsch.model.Role;
 import com.rsch.model.User;
 import com.rsch.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,6 +43,8 @@ public class AuthenticationService {
                 request.email(),
                 passwordEncoder.encode(request.password())
         );
+
+        user.setRole(Role.USER);
 
         userRepository.save(user);
 

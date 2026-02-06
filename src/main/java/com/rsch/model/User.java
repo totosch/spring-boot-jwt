@@ -27,6 +27,8 @@ public class User implements UserDetails {
     private String password;
     @Column(nullable = false)
     private boolean active = true;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 
     public User() {
@@ -98,9 +100,9 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + this.role.name());
+        return List.of(authority);
     }
 
     public String getPassword() {
@@ -129,5 +131,13 @@ public class User implements UserDetails {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
