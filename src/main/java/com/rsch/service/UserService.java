@@ -5,9 +5,9 @@ import com.rsch.dto.UserResponse;
 import com.rsch.exception.UserNotFoundException;
 import com.rsch.model.User;
 import com.rsch.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserService {
@@ -20,11 +20,16 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public List<UserResponse> getAllUsers() {
+   /*public List<UserResponse> getAllUsers() {
         return userRepository.findAll()
                 .stream()
                 .map(userMapper::toResponse)
                 .toList();
+    }*/
+
+    public Page<UserResponse> getAllUsers(Pageable pageable){
+        return userRepository.findAll(pageable)
+                .map(userMapper::toResponse);
     }
 
     // Recibe Request DTO, devuelve Response DTO

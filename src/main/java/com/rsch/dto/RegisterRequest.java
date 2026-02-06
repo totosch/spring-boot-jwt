@@ -23,7 +23,7 @@ public record RegisterRequest(
         @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "Invalid email format")
         String email,
 
-        @NotBlank(message = "password cant be blank")
-        @Size(min = 6, max = 30, message = "password should be between 6 and 30 characters")
+        @NotBlank(message = "password should be between 8 and 20 characters with at least one number and a special character")
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+={\\\\[\\\\]};:<>|./?,-]).{8,20}$", message = "password should be between 8 and 20 characters with an uppercase and lowercase letter, at least one number and a special character")
         String password
 ) {}

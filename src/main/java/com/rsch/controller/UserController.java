@@ -5,13 +5,12 @@ import com.rsch.dto.UserResponse;
 import com.rsch.model.User;
 import com.rsch.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-//implementar DTO's
 
 @RestController
 @RequestMapping("api/users")
@@ -24,8 +23,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getUsers() { // <--- Retorna Lista de DTOs
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<Page<UserResponse>> getUsers(@PageableDefault(size = 10, page = 0, sort = "id") Pageable pageable) {
+        Page<UserResponse> page = userService.getAllUsers(pageable);
+        return ResponseEntity.ok(page);
     }
 
     @PostMapping
