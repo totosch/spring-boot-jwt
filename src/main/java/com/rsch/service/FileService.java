@@ -1,19 +1,17 @@
 package com.rsch.service;
 
 import com.rsch.dto.FileResponse;
-import com.rsch.dto.UserResponse;
 import com.rsch.exception.FileEntityNotFoundException;
-import com.rsch.exception.GlobalExceptionHandler;
 import com.rsch.model.User;
 import com.rsch.model.UserFile;
 import com.rsch.repository.UserFileRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,17 +20,17 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class FileService {
 
     private final UserFileRepository userFileRepository;
     private final String FOLDER_PATH = "/home/schillaci/Desktop/FilesPath/";
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public FileService(UserFileRepository userFileRepository) {
+    public FileService(UserFileRepository userFileRepository, KafkaTemplate<String, String> kafkaTemplate) {
         this.userFileRepository = userFileRepository;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public FileResponse uploadFile(MultipartFile file, User user) throws IOException {
@@ -54,6 +52,9 @@ public class FileService {
         );
 
         UserFile savedFile = userFileRepository.save(fileToSave);
+
+        kafkaTemplate.send("upload-file-topic", user.getEmail());
+        System.out.println("kafka sending email to: " + user.getEmail());
 
         return new FileResponse(
                 savedFile.getId(),
