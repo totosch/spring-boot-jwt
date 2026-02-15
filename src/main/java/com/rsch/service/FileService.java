@@ -6,6 +6,7 @@ import com.rsch.model.User;
 import com.rsch.model.UserFile;
 import com.rsch.repository.UserFileRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -89,7 +90,9 @@ public class FileService {
                 ));
     }
 
+    @Cacheable(value = "files", key = "#id")
     public UserFile getFileEntity(Integer id) {
+        System.out.println("got the file from the db with id " + id);
         return userFileRepository.findById(id)
                 .orElseThrow(() -> new FileEntityNotFoundException("file not found with id: " + id));
     }
@@ -104,7 +107,7 @@ public class FileService {
             return new InputStreamResource(s3Client.getObject(getObjectRequest));
 
         } catch (NoSuchKeyException e) {
-            throw new FileNotFoundException("File not found in S3 bucket: " + s3Key);
+            throw new FileNotFoundException("file not found in S3 bucket: " + s3Key);
         }
     }
 

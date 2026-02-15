@@ -1,10 +1,16 @@
 package com.rsch.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+
+import java.io.Serializable;
 
 @Entity
-@Table(name = "user_file")
-public class UserFile {
+@Table(name = "user_file", indexes = {
+        @Index(name = "idx_user_file_user_id", columnList = "user_id")
+})
+public class UserFile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
